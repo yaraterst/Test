@@ -1,0 +1,33 @@
+name: Run Python Script Daily  # ワークフローの名前（Actions画面に表示される）
+
+on:
+  schedule:
+    - cron: '30 9 * * *'        # 毎日 9:30 (UTC) = 18:30 (日本時間) に実行
+  workflow_dispatch:            # GitHub UI から手動実行も可能にする
+
+jobs:
+  run-script:                   # ジョブ名（任意）
+
+    runs-on: ubuntu-latest      # Ubuntu 最新版の仮想マシンで実行
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        # GitHubリポジトリのコードを仮想マシンにコピー
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+        # Python 3.10 をインストールして使えるようにする
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+        # Pythonパッケージを requirements.txt に従ってインストール
+        # 空ファイルでも問題なし（あとで必要パッケージを追加）
+
+      - name: Run script
+        run: |
+          python main.py
+        # main.py を実行（自作のスクリプト）
